@@ -1,10 +1,12 @@
 const express = require('express')
+const cors = require('cors')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
 const fetch = require('node-fetch')
 require('dotenv').config()
 
 const app = express()
+app.use(cors())
 const apikey = process.env.OPENWEATHERMAP_API_KEY
 
 const schema = buildSchema(`
@@ -57,7 +59,12 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true
 }))
 
-const port = 4000
-app.listen(port, () => {
-  console.log('Running on port:'+port)
-})
+export const client = new ApolloClient({
+    uri: 'http://localhost:4000/graphql',
+    cache: new InMemoryCache()
+  });
+
+// const port = 4000
+// app.listen(port, () => {
+//   console.log('Running on port:'+port)
+// })
